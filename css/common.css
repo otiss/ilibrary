@@ -1,0 +1,35 @@
+.item,
+.item-body {
+  overflow: hidden;
+  zoom: 1;
+}
+
+.item,
+.item .item {
+  margin-top: 15px;
+}
+
+.item:first-child {
+  margin-top: 0;
+}
+
+.item-object {
+  display: block;
+}
+
+.item-heading {
+  margin: 0 0 5px;
+}
+
+.item > .pull-left {
+  margin-right: 10px;
+}
+
+.item > .pull-right {
+  margin-left: 10px;
+}
+
+.item-list {
+  padding-left: 0;
+  list-style: none;
+}

@@ -1,0 +1,19 @@
+﻿<input ng-model="keywords" type="search" class="form-control app-search" placeholder="Search Books.." />
+
+<div class="scrollable">
+  <div class="scrollable-content">
+    <div class="list-group">
+		<a ng-repeat="book in books" class="list-group-item item" href="javascript:;;;">
+			<div class="pull-left">
+				<i class="fa fa-book"></i>
+			</div>
+			<div class="item-body">
+				<h5 class="item-heading">{{book.title}}</h5>
+				<div class="item-metadata">
+					<span><span ng-repeat="authorName in book.author">{{authorName}}</span></span>
+				</div>
+			</div>
+		</a>
+	</div>
+  </div>
+</div>
