@@ -8,7 +8,12 @@
 		$routeProvider.when("/home", {
 			templateUrl: __TPL__("tpl/search.html"),
 			controller: "HomeCtrl"
-		});		
+		});
+		
+		$routeProvider.when("/libraries/:libraryID", {
+			templateUrl: __TPL__("tpl/library.html"),
+			controller: "LibraryCtrl"
+		});
 		
 		$routeProvider.otherwise({
 			templateUrl: __TPL__("tpl/blank.html"),

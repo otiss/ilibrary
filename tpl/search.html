@@ -1,11 +1,20 @@
-﻿<input ng-model="keywords" type="search" class="form-control app-search" placeholder="Search Books.." />
+<header>
+	<div content-for="title">
+	  	<span>首页</span>
+	</div>
+</header>
 
+<input ng-model="keywords" type="search" class="form-control app-search" placeholder="请输入关键字.." ng-keypress="search($event, keywords)"/>
 <div class="scrollable">
   <div class="scrollable-content">
-    <div class="list-group">
-		<a ng-repeat="book in books" class="list-group-item item" href="javascript:;;;">
+    <div class="list-group" ng-if="library.books.length > 0">
+		<a ng-repeat="book in library.books" class="list-group-item item" href="javascript:;;;">
 			<div class="pull-left">
 				<i class="fa fa-book"></i>
+			</div>
+			<div class="pull-right">
+				<span class="btn"><i class="fa fa-heart"></i>想要</span>
+				<span class="btn"><i class="fa fa-star"></i>拥有</span>
 			</div>
 			<div class="item-body">
 				<h5 class="item-heading">{{book.title}}</h5>

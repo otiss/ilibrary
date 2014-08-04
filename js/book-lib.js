@@ -273,73 +273,9 @@
 		};
 	});
 	
-	app.filter("itemType", function() {
+	app.filter("count", function() {
 		return function(input) {
-			if(!input){
-				return "";
-			}
-			var types = [];
-			if(input.asHome){
-				types.push("asHome");
-			}
-			if(input.timeLimit){
-				types.push("timeLimit");
-			}
-			if(input.express){
-				types.push("express");
-			}
-			return types;
-		};
-	});
-	
-	app.filter("offline", function() {
-		return function(input) {
-			if(!input){
-				return {};
-			}
-			var info = {};
-			if(input.barcode){
-				info.barcode = input.barcode;
-			}
-			return info;
-		};
-	});
-	
-	app.filter("parameter", function() {
-		return function(input, more) {
-			if(!input){
-				return "";
-			}
-			input = _.pick(input, 'userID', 'code', 'state');
-			input = _.map(input, function(value, key){
-				return key + '=' + value;
-			});
-			if(more){
-				input.push(more);
-			}
-			var ret = input.join('&');
-			return ret?('?' + ret):'';
-		};
-	});
-	
-	app.filter("orderStatus", function() {
-		var statusMaping = {
-			"p1": "已购买",
-			"p5": "已审核",
-			"p100": "已出库",
-			"p150": "已发货",
-			"p190": "收货及确认",
-			"p200": "已完成",
-			"p300": "已取消"
-		};
-		return function(input) {
-			return statusMaping["p" + input] || "未知";
-		};
-	});
-	
-	app.filter("consigneeAddress", function() {
-		return function(input) {
-			return "桐乡市 " + (input || "");
+			return input || "0";
 		};
 	});
 

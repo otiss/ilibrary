@@ -1,7 +1,7 @@
 <!doctype HTML>
 <html lang="zh-CN">
 	<head>
-		<title>My Libaray</title>
+		<title>我的图书馆</title>
 		<meta charset="utf-8" />
 		<meta name="fragment" content="!">
 		<meta content="yes" name="apple-mobile-web-app-capable"/>
@@ -12,7 +12,6 @@
 		<!-- build:css /css/cvsms.css -->
 		<link href="/css/mobile-nav.css" rel="stylesheet" type="text/css" />
 		<link href="/css/mobile-angular-ui-base.css" rel="stylesheet" type="text/css" />
-		<link href="/css/mobile-angular-ui-desktop.css" rel="stylesheet" type="text/css" />
 		<link href="/css/mobile-angular-ui-hover.css" rel="stylesheet" type="text/css" />
 		<link href="/css/common.css" rel="stylesheet" type="text/css" />
 		<!-- endbuild -->
@@ -55,8 +54,10 @@
 		<div class="scrollable sidebar-scrollable">
 			<div class="scrollable-content">
 				<div class="list-group" toggle="off" bubble target="mainSidebar">
-					<a class="list-group-item" href="javascript:;;;" ng-click="go('/')">Home <i class="fa fa-chevron-right pull-right"></i></a>
-					<a class="list-group-item" href="javascript:;;;" ng-click="go('/scroll')">Scroll <i class="fa fa-chevron-right pull-right"></i></a>
+					<a class="list-group-item" href="javascript:;;;" ng-click="go('/home')">发现 <i class="fa fa-chevron-right pull-right"></i></a>
+					<a class="list-group-item" href="javascript:;;;" ng-click="go('/books/own')">我拥有 <i class="fa fa-chevron-right pull-right"></i></a>
+					<a class="list-group-item" href="javascript:;;;" ng-click="go('/books/want')">我想要 <i class="fa fa-chevron-right pull-right"></i></a>
+					<a class="list-group-item" href="javascript:;;;" ng-click="go('/books/share')">我分享 <i class="fa fa-chevron-right pull-right"></i></a>
 				</div>
 			</div>
 		</div>
@@ -66,14 +67,16 @@
 		<div class="scrollable">
 		  <div class="scrollable-content">
 			<div class="list-group" toggle="off" bubble target="rightSidebar">
-				<a ng-repeat="book in library.books" class="list-group-item item" href="javascript:;;;">
+				<a ng-repeat="library in libraries" class="list-group-item item" href="javascript:;;;" ng-click="go('/libraries/' + library._id)">
 					<div class="pull-left">
 						<i class="fa fa-book"></i>
 					</div>
 					<div class="item-body">
-						<h5 class="item-heading">{{book.title}}</h5>
+						<h5 class="item-heading">{{library.name}}</h5>
 						<div class="item-metadata">
-							<span>Author: <span ng-repeat="authorName in book.author">{{authorName}}</span></span>
+							<span>拥有: {{library.ownCount || count}}</span>
+							<span>可借阅: {{library.availableCount || count}}</span>
+							<span>可借阅: {{library.borrowedCount || count}}</span>
 						</div>
 					</div>
 				</a>
@@ -84,21 +87,21 @@
 	
 	<body ng-app="bookApp">
 		<div class="app">
-			<div class="navbar navbar-app navbar-absolute-top">
+			<header class="navbar navbar-app navbar-absolute-top">
 				<div class="navbar-brand navbar-brand-center" yield-to="title">
-				  <span>My Books</span>
+				  <span>我的图书馆</span>
 				</div>
 				<div class="btn-group pull-left">
 				  <div ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle">
-					<i class="fa fa-bars"></i> Menu
+					<i class="fa fa-bars"></i> 菜单
 				  </div>
 				</div>
 				<div class="btn-group pull-right" yield-to="navbarAction">
 				  <div ng-click="toggle('rightSidebar')" class="btn btn-navbar">
-					<i class="fa fa-comment"></i> Me
+					<i class="fa fa-comment"></i> 图书馆
 				  </div>
 				</div>
-			  </div>
+			  </header>
 			<div class="app-body" ng-class="{loading: loading}">
 				<div ng-show="loading" class="app-content-loading">
 					<i class="fa fa-spinner fa-spin loading-spinner"></i>

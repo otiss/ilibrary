@@ -55,10 +55,18 @@
 	app.factory("Book", ["$resourceHttp", function($mongolabResourceHttp){
 		return $mongolabResourceHttp("books");
 	}]);
+	app.factory("BookReference", ["$resourceHttp", function($mongolabResourceHttp){
+		return $mongolabResourceHttp("bookReferences");
+	}]);
+	app.factory("Library", ["$resourceHttp", function($mongolabResourceHttp){
+		return $mongolabResourceHttp("libraries");
+	}]);
 	
 	
-	app.run(["$rootScope", "$location", "$window", "$cookies", "$filter", "$navigate", "$document", "User", "Book",
-	function($rootScope, $location, $window, $cookies, $filter, $navigate, $document, User, Book){
+	app.run(["$rootScope", "$location", "$window", "$cookies", "$filter", "$navigate", "$document", 
+	         "User", "Book", "Library",
+	function($rootScope, $location, $window, $cookies, $filter, $navigate, $document, 
+			User, Book, Library){
 		
 		var userID = loginedUser._id;
 		$rootScope.user = new User(loginedUser);
@@ -79,6 +87,10 @@
 		var library = $rootScope.library = {};
 		Book.query({}, function(books){
 			library.books = books;
+		});
+		$rootScope.libraries = [];
+		Library.query({}, function(libraries){
+			$rootScope.libraries = libraries;
 		});
 		
 	}]);
