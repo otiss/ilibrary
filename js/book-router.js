@@ -15,6 +15,19 @@
 			controller: "LibraryCtrl"
 		});
 		
+		$routeProvider.when("/books/wish", {
+			templateUrl: __TPL__("tpl/wishes.html"),
+			controller: "WishesCtrl"
+		});
+		$routeProvider.when("/books/own", {
+			templateUrl: __TPL__("tpl/ownes.html"),
+			controller: "OwnesCtrl"
+		});
+		$routeProvider.when("/books/mylibrary", {
+			templateUrl: __TPL__("tpl/mylibrary.html"),
+			controller: "MyLibraryCtrl"
+		});
+		
 		$routeProvider.otherwise({
 			templateUrl: __TPL__("tpl/blank.html"),
 			controller: ["$scope", "$routeParams", "$location", function($scope, $routeParams, $location){

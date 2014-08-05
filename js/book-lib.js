@@ -78,6 +78,59 @@
 		return exports;
 	}]);
 	
+	app.factory('IDGenerator', ['$rootScope', function($rootScope){
+		
+		return {
+			wishID: function(bookID){
+				return ['wish', $rootScope.user._id, bookID].join('_');
+			},
+			ownID: function(bookID){
+				return ['own', $rootScope.user._id, bookID].join('_');
+			},
+			libraryID: function(){
+				return [$rootScope.user._id, 'private', 'library'].join('_');
+			}
+		}
+	}]);
+	
+	app.factory('ObjectConverter', ['$rootScope', '$filter', 'Book', 'BookReference', 
+	                                function($rootScope, $filter, Book, BookReference){
+		var toReference = function(book){
+			var ref = new BookReference(_.pick(book, 'title', 'author', 'price'));
+			ref.image = $filter('image')(book.images);
+			if($rootScope.user){
+				ref.container = {
+					containerID: $rootScope.user._id,
+					containerType: 'user'
+				}
+			}
+			return ref;
+		}
+		return {
+			toBook: function(dbBook){
+				var book = new Book(_.pick(dbBook, 'isbn10', 'isbn13', 'images', 'author', 'translator', 'tags', 'price'));
+				book.referID = dbBook.id;
+				
+				var title = dbBook.title;
+				if(dbBook.subtitle){
+					title = title + ' ' + dbBook.subtitle;
+				}
+				book.title = title;
+				return book;
+			},
+			toWish: function(book){
+				return _.extend(toReference(book), {
+					types: ['wishship']
+				});
+			},
+			toOwn: function(book){
+				return _.extend(toReference(book), {
+					types: ['ownership']
+				});
+			}
+		}
+	}]);
+	
 	app.directive('selectAll', function () {
 		return {
 			replace: true,
@@ -86,8 +139,8 @@
 				checkboxes: '=',
 				allselected: '=allSelected',
 				allclear: '=allClear',
-				sum: '=',
-				handler: '='
+				handler: '=',
+				postHandler: '='
 			},
 			template: '<button class="btn gray" ng-click="masterChange()">{{master?"全不选":"全选"}}',
 			controller: function ($scope, $element) {
@@ -107,14 +160,12 @@
 				$scope.$watch('checkboxes', function () {
 					var allSet = true,
 						allClear = true,
-						sum = 0;
+						selectedcbs = [];
 					angular.forEach($scope.checkboxes, function (cb, index) {
-						if (cb.selected && cb.$$available) {
+						if (cb.selected) {
 							allClear = false;
-							if(cb.quantity && cb.price){
-								sum += cb.quantity * cb.price;
-							}
 							$scope.handler && _.isFunction($scope.handler) && $scope.handler(cb);
+							selectedcbs.push(cb);
 						} else {
 							allSet = false;
 						}
@@ -126,9 +177,7 @@
 					if ($scope.allclear !== undefined) {
 						$scope.allclear = allClear;
 					}
-					if ($scope.sum !== undefined) {
-						$scope.sum = sum;
-					}
+					$scope.postHandler && _.isFunction($scope.postHandler) && $scope.postHandler(selectedcbs);
 
 					$element.prop('indeterminate', false);
 					if (allSet) {
@@ -144,120 +193,13 @@
 			}
 		};
 	});
-
-	
-	
-	app.factory("OrderNotification", ["$http", "$config", function($http, $config){
-		var url = $config.url + "/notification/order",
-			transformFn = function(data){
-				return data;
-			},
-			promiseThen = function(httpPromise, successcb, errorcb) {
-				return httpPromise.then(function(response) {
-					var result = transformFn(response.data);
-					(successcb || angular.noop)(result, response.status, response.headers, response.config);
-					return result;
-				}, function(response) {
-					(errorcb || angular.noop)(undefined, response.status, response.headers, response.config);
-					return undefined;
-				});
-			}
-		return function(orderID){
-			return {
-				toKeepers: function(successcb, errorcb){
-					var httpPromise = $http.get(url, {
-							params: {
-								orderID: orderID,
-								action: "notify2keepers",
-								userID: ((loginedUser && loginedUser._id) || "anonymous"),
-								openID: ((loginedUser && loginedUser.weixin) || "anonymous")
-							}
-						});
-					return promiseThen(httpPromise, successcb, errorcb);
-				},
-				toDelivers: function(successcb, errorcb){
-					var httpPromise = $http.get(url, {
-							params: {
-								orderID: orderID,
-								action: "notify2delivers",
-								userID: ((loginedUser && loginedUser._id) || "anonymous"),
-								openID: ((loginedUser && loginedUser.weixin) || "anonymous")
-							}
-						});
-					return promiseThen(httpPromise, successcb, errorcb);
-				},
-				toCustomer: function(successcb, errorcb){
-					var httpPromise = $http.get(url, {
-							params: {
-								orderID: orderID,
-								action: "notify2customer",
-								userID: ((loginedUser && loginedUser._id) || "anonymous"),
-								openID: ((loginedUser && loginedUser.weixin) || "anonymous")
-							}
-						});
-					return promiseThen(httpPromise, successcb, errorcb);
-				},
-				confirm: function(successcb, errorcb){
-					var httpPromise = $http.get(url, {
-							params: {
-								orderID: orderID,
-								action: ["notify2keepers", "notify2customer"],
-								userID: ((loginedUser && loginedUser._id) || "anonymous"),
-								openID: ((loginedUser && loginedUser.weixin) || "anonymous")
-							}
-						});
-					return promiseThen(httpPromise, successcb, errorcb);
-				},
-				cancel: function(successcb, errorcb){
-					var httpPromise = $http.get(url, {
-							params: {
-								orderID: orderID,
-								action: ["cancelOrder2customer", "cancelOrder2keepers"],
-								userID: ((loginedUser && loginedUser._id) || "anonymous"),
-								openID: ((loginedUser && loginedUser.weixin) || "anonymous")
-							}
-						});
-					return promiseThen(httpPromise, successcb, errorcb);
-				}
-			}
-		}
-	}]);
-	
-	app.factory("QRCode", ["$http", "$config", function($http, $config){
-		var url = $config.url + "/qrcode",
-			transformFn = function(data){
-				return data;
-			},
-			promiseThen = function(httpPromise, successcb, errorcb) {
-				return httpPromise.then(function(response) {
-					var result = transformFn(response.data);
-					(successcb || angular.noop)(result, response.status, response.headers, response.config);
-					return result;
-				}, function(response) {
-					(errorcb || angular.noop)(undefined, response.status, response.headers, response.config);
-					return undefined;
-				});
-			}
-		return function(id, type){
-			type = type || 'items';
-			return {
-				create: function(successcb, errorcb){
-					var jsonBody = {referID: id, type: type},
-						httpPromise = $http.post(url, jsonBody);
-					return promiseThen(httpPromise, function(res){
-						successcb && successcb(res.url);
-					}, errorcb);
-				}
-			}
-		}
-	}]);
 	
 	app.filter("image", function(){
 		//size: small - 64px, middle - 180px, large - 440px
 		var mapping = {
-			small: "smallImageURL",
-			middle: "middleImageURL",
-			large: "largeImageURL"
+			small: "small",
+			middle: "medium",
+			large: "large"
 		}
 		return function(input, type){
 			type = type || "large";

@@ -1,6 +1,6 @@
 <header>
 	<div content-for="title">
-	  	<span>{{library.name}}</span>
+	  	<span>我想看的图书</span>
 	</div>
 </header>
 
@@ -10,6 +10,9 @@
 		<a ng-repeat="book in books" class="list-group-item media book" href="javascript:;;;">
 			<div class="pull-left">
 				<img class="img-thumbnail" ng-src="{{book.image}}"/>
+			</div>
+			<div class="pull-right">
+				<span class="btn" ng-if="!book.$$alreadyShare" ng-click="share($index, book)"><i class="fa fa-share"></i>分享</span>
 			</div>
 			<div class="media-body">
 				<h5 class="media-heading">{{book.title}}</h5>

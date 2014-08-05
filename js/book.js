@@ -70,9 +70,20 @@
 		
 		var userID = loginedUser._id;
 		$rootScope.user = new User(loginedUser);
-		$rootScope.go = function(path, transition){
-			transition = transition || "none";
-			$navigate.go(path, transition);
+		$rootScope.go = function(path, options, transition, location){
+			if(_.isObject(options)){
+				options = options || {};
+			}else{
+				var location = options;
+				options = {
+					location: options,
+					transition: 'none'
+				};
+			}
+			$navigate.go(path, options.transition || "none");
+			if(options.location){
+				$rootScope.toggle(options.location, 'off');
+			}
 		}
 		$rootScope.back = function(){
 			$navigate.back();
@@ -89,7 +100,12 @@
 			library.books = books;
 		});
 		$rootScope.libraries = [];
-		Library.query({}, function(libraries){
+		User.query({type: 'library'}, function(users){
+			var libraries = _.map(users, function(user){
+				var lib = new Library(_.pick(user, '_id')); 
+				lib.name = user.name + '的图书馆';
+				return lib;
+			});
 			$rootScope.libraries = libraries;
 		});
 		

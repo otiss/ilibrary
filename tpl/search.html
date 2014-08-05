@@ -7,14 +7,14 @@
 <input ng-model="keywords" type="search" class="form-control app-search" placeholder="请输入关键字.." ng-keypress="search($event, keywords)"/>
 <div class="scrollable">
   <div class="scrollable-content">
-    <div class="list-group" ng-if="library.books.length > 0">
-		<a ng-repeat="book in library.books" class="list-group-item item" href="javascript:;;;">
+    <div class="list-group" ng-if="books.length > 0">
+		<a ng-repeat="book in books" class="list-group-item item" href="javascript:;;;">
 			<div class="pull-left">
 				<i class="fa fa-book"></i>
 			</div>
 			<div class="pull-right">
-				<span class="btn"><i class="fa fa-heart"></i>想要</span>
-				<span class="btn"><i class="fa fa-star"></i>拥有</span>
+				<span class="btn" ng-if="!book.$$alreadyWish" ng-click="wish($index, book)"><i class="fa fa-heart"></i>想要</span>
+				<span class="btn" ng-if="!book.$$alreadyOwn" ng-click="own($index, book)"><i class="fa fa-star"></i>已有</span>
 			</div>
 			<div class="item-body">
 				<h5 class="item-heading">{{book.title}}</h5>
