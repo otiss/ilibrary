@@ -1,6 +1,6 @@
 <header>
 	<div content-for="title">
-	  	<span>{{library.name}}</span>
+	  	<span>{{library | library}}</span>
 	</div>
 </header>
 
@@ -11,6 +11,9 @@
 			<div class="pull-left">
 				<img class="img-thumbnail" ng-src="{{book.image}}"/>
 			</div>
+            <div class="pull-right">
+                <span class="btn btn-default" ng-if="user._id && !book.$$alreadyRequest" ng-click="want($index, book)"><i class="fa fa-eye"></i>请求</span>
+            </div>
 			<div class="media-body">
 				<h5 class="media-heading">{{book.title}}</h5>
 				<div class="book-mediadata">

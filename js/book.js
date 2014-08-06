@@ -51,23 +51,27 @@
 	})
 	
 	app.factory("User", ["$resourceHttp", function($mongolabResourceHttp){
-		return $mongolabResourceHttp("users");
+		return $mongolabResourceHttp("users", 'user');
 	}]);
 	app.factory("Book", ["$resourceHttp", function($mongolabResourceHttp){
-		return $mongolabResourceHttp("books");
+		return $mongolabResourceHttp("books", 'book');
 	}]);
 	app.factory("BookReference", ["$resourceHttp", function($mongolabResourceHttp){
-		return $mongolabResourceHttp("bookReferences");
+		return $mongolabResourceHttp("bookReferences", 'bookRef');
 	}]);
 	app.factory("Library", ["$resourceHttp", function($mongolabResourceHttp){
-		return $mongolabResourceHttp("libraries");
+		return $mongolabResourceHttp("libraries", 'library');
 	}]);
+
+    app.factory("Activity", ["$resourceHttp", function($mongolabResourceHttp){
+        return $mongolabResourceHttp("activities", 'activity');
+    }]);
 	
 	
 	app.run(["$rootScope", "$location", "$window", "$cookies", "$filter", "$navigate", "$document", 
-	         "User", "Book", "Library",
+	         "User", "Book", "Library", 'Activity',
 	function($rootScope, $location, $window, $cookies, $filter, $navigate, $document, 
-			User, Book, Library){
+			User, Book, Library, Activity){
 		
 		$rootScope.go = function(path, options, transition, location){
 			if(_.isObject(options)){
@@ -112,13 +116,17 @@
 				if(users && users.length > 0){
 					$rootScope.user = users[0];
 					_.extend(loginedUser, $rootScope.user);
+
+                    $rootScope.$emit('libraries.refresh');
+                    $rootScope.$emit('request.refresh');
 				}else{
 					var newUser = new User({_id: userID, type: 'library'});
 					newUser.$save(function(){
 						userID = newUser._id;
 						$rootScope.user = newUser;
 						_.extend(loginedUser, $rootScope.user);
-						$rootScope.$emit('libraries.refresh');
+                        $rootScope.$emit('libraries.refresh');
+                        $rootScope.$emit('request.refresh');
 						$rootScope.go('/users/self/edit');
 					});
 				}
@@ -127,7 +135,11 @@
 		
 		$rootScope.libraries = [];
 		$rootScope.$on('libraries.refresh', function(){
-			User.query({type: 'library'}, function(users){
+            var qo = {type: 'library'};
+            if($rootScope.user && $rootScope.user._id){
+                qo = _.extend({_id: {$ne: $rootScope.user._id}}, qo);
+            }
+			User.query(qo, function(users){
 				var libraries = _.map(users, function(user){
 					var lib = new Library(_.pick(user, '_id')); 
 					lib.name = user.name;
@@ -136,7 +148,17 @@
 				$rootScope.libraries = libraries;
 			});
 		});
-		$rootScope.$emit('libraries.refresh');
+        $rootScope.$on('request.refresh', function(){
+            if($rootScope.user && $rootScope.user._id){
+                Activity.query({verb: 'request.borrow', status: 0, context: {contextID: $rootScope.user._id, contextType: 'library'}}, function(activities){
+                    $rootScope.requests = {
+                        items: activities,
+                        total: activities.length
+                    };
+                });
+            }
+        });
+
 		
 	}]);
 

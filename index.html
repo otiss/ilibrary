@@ -48,13 +48,42 @@
 		<base href="/">
 	</head>
 	<div id="mainSidebar" class="sidebar sidebar-left" toggleable parent-active-class="sidebar-left-in">
-		<div class="scrollable sidebar-scrollable">
+        <nav  class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <span class="navbar-brand">我的图书馆</span>
+                    </div>
+                    <!--
+                    <div class="navbar-toggle">
+                        <ul class="nav">
+                            <li ng-if="requests.total > 0" class="active">
+                                <a href="#">请求<span class="badge">{{requests.total}}</span></a>
+                            </li>
+                        </ul>
+                        <ul class="nav">
+                            <li><i class="fa fa-photo"></i></li>
+                        </ul>
+                    </div>
+                    -->
+                </div>
+            </div>
+        </nav>
+        <div class="scrollable sidebar-scrollable">
 			<div class="scrollable-content">
-				<div class="list-group" toggle="off" bubble target="mainSidebar">
-					<a class="list-group-item" href="javascript:;;;" ng-click="go('/home', 'mainSidebar')">发现 <i class="fa fa-chevron-right pull-right"></i></a>
-					<a class="list-group-item" ng-if="user._id" href="javascript:;;;" ng-click="go('/books/own', 'mainSidebar')">我拥有 <i class="fa fa-chevron-right pull-right"></i></a>
-					<a class="list-group-item" ng-if="user._id" href="javascript:;;;" ng-click="go('/books/wish', 'mainSidebar')">我想要 <i class="fa fa-chevron-right pull-right"></i></a>
-					<a class="list-group-item" ng-if="user._id" href="javascript:;;;" ng-click="go('/books/mylibrary', 'mainSidebar')">我分享 <i class="fa fa-chevron-right pull-right"></i></a>
+                <div class="list-group" toggle="off" bubble target="mainSidebar">
+					<a class="list-group-item" href="javascript:;;;" ng-click="go('/home', 'mainSidebar')">
+                        发现 <i class="fa fa-chevron-right pull-right"></i>
+                    </a>
+					<a class="list-group-item" ng-if="user._id" href="javascript:;;;" ng-click="go('/books/own', 'mainSidebar')">
+                        我拥有 <i class="fa fa-chevron-right pull-right"></i>
+                    </a>
+					<a class="list-group-item" ng-if="user._id" href="javascript:;;;" ng-click="go('/books/wish', 'mainSidebar')">
+                        我想要 <i class="fa fa-chevron-right pull-right"></i>
+                    </a>
+					<a class="list-group-item" ng-if="user._id" href="javascript:;;;" ng-click="go('/books/mylibrary', 'mainSidebar')">
+                        我分享 <i class="fa fa-chevron-right pull-right"></i>
+                    </a>
 				</div>
 			</div>
 		</div>

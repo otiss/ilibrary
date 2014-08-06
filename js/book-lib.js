@@ -93,7 +93,7 @@
 		}
 	}]);
 	
-	app.factory('ObjectConverter', ['$rootScope', '$filter', 'Book', 'BookReference', 
+	app.factory('ObjectConverter', ['$rootScope', '$filter', 'Book', 'BookReference',
 	                                function($rootScope, $filter, Book, BookReference){
 		var toReference = function(book){
 			var ref = new BookReference(_.pick(book, 'title', 'author', 'price'));
@@ -131,7 +131,36 @@
 			}
 		}
 	}]);
-	
+
+    app.factory('ActivityGenerator', ['$rootScope', 'Activity', function($rootScope, Activity){
+
+        return {
+            fromBookReference: function(verb, bref, ctx){
+                var act = new Activity(
+                    {
+                        actor: {
+                            actorID: $rootScope.user._id,
+                            actorType: $rootScope.user.$$type
+                        },
+                        verb: verb,
+                        target: {
+                            actorID: bref._id,
+                            actorType: bref.$$type
+                        },
+                        status: 0
+                    }
+                );
+                if(ctx && ctx._id && ctx.$$type){
+                    act.context = {
+                        contextID: ctx._id,
+                        contextType: ctx.$$type
+                    }
+                }
+                return act;
+            }
+        }
+    }]);
+
 	app.directive('selectAll', function () {
 		return {
 			replace: true,

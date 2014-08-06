@@ -89,8 +89,8 @@
 		
 	}]);
 	
-	app.controller('LibraryCtrl', ['$scope', '$routeParams', 'User', 'Library', 'BookReference', 
-	                               function($scope, $routeParams, User, Library, BookReference){
+	app.controller('LibraryCtrl', ['$scope', '$routeParams', 'User', 'Library', 'BookReference', 'ActivityGenerator',
+	                               function($scope, $routeParams, User, Library, BookReference, ActivityGenerator){
 		var libID = $routeParams.libraryID,
 			queryObj = {container: {containerID: libID, containerType: 'user'}};
 		BookReference.query(queryObj, function(brs){
@@ -101,6 +101,14 @@
 			var lib = $scope.library = new Library(_.pick(user, '_id'));
 			lib.name = user.name;
 		});
+
+         $scope.want = function($index, book){
+            var act = ActivityGenerator.fromBookReference('request.borrow', book, $scope.library);
+             act.$save(function(){
+                book.$$alreadyRequest = true;
+             });
+         }
+
 	}]);
 	
 	app.controller('WishesCtrl', ['$scope', '$rootScope', 'BookReference', 
