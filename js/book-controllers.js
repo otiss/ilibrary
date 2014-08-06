@@ -154,6 +154,15 @@
 		}else{
 			$scope.user = new User();
 		}
+		
+		$scope.save = function(){
+			var updateObj = _.pick($scope.user, 'name');
+			$scope.user.$updateset(updateObj, function(){
+				_.extend($rootScope.user, updateObj);
+				$rootScope.go('/');
+			});
+		}
+		
 	}]);
 	
 })(angular, _);
