@@ -2,12 +2,12 @@
 	'use strict';
 	var app = angular.module('bookApp');
 	
-	app.controller('HomeCtrl', ['$scope', '$filter', 'dbBook', 'Book', 'BookReference', 'IDGenerator', 'ObjectConverter', 
-	                            function($scope, $filter, dbBook, Book, BookReference, Generator, Converter){
+	app.controller('HomeCtrl', ['$scope', '$rootScope', '$filter', 'dbBook', 'Book', 'BookReference', 'IDGenerator', 'ObjectConverter', 
+	                            function($scope, $rootScope, $filter, dbBook, Book, BookReference, Generator, Converter){
 		Book.query({type: 'recommend'}, {count: 20}, function(books){
 			var bookIDs = _.pluck(books, '_id');
-			if(bookIDs && bookIDs.length > 0){
-				BookReference.query({bookID: {$in: bookIDs}}, function(brs){
+			if($rootScope.user && bookIDs && bookIDs.length > 0){
+				BookReference.query({bookID: {$in: bookIDs}, container: {containerID: $rootScope.user._id, containerType: 'user'}}, function(brs){
 					_.each(books, function(book){
 						var found = _.find(brs, function(br){
 							return br.bookID == book._id && br.types && br.types.indexOf('wishship') > -1;
@@ -140,4 +140,20 @@
 			$scope.books = brs;
 		});
 	}]);
+	
+	app.controller('EditUserCtrl', ['$scope', '$rootScope', 'User', 
+	                               function($scope, $rootScope, User){
+		var userID = '';
+		if($rootScope.user && $rootScope.user._id){
+			userID = $rootScope.user._id;
+		}
+		if(userID){
+			User.getById(userID, function(user){
+				$scope.user = user;
+			})
+		}else{
+			$scope.user = new User();
+		}
+	}]);
+	
 })(angular, _);

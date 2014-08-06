@@ -35,6 +35,7 @@
 			};
 		  }]);
 		
+		
 		$resourceHttpProvider.setAuthParams({
 			userID: ((loginedUser && loginedUser._id) || "anonymous"),
 			openID: ((loginedUser && loginedUser.weixin) || "anonymous")
@@ -68,8 +69,26 @@
 	function($rootScope, $location, $window, $cookies, $filter, $navigate, $document, 
 			User, Book, Library){
 		
-		var userID = loginedUser._id;
-		$rootScope.user = new User(loginedUser);
+		var userID = loginedUser && loginedUser._id;
+		if(userID){
+			$rootScope.user = new User(loginedUser);
+		}else if($location.search() && $location.search().userID){
+			userID = $location.search().userID;
+			User.query({_id: userID}, function(users){
+				if(users && users.length > 0){
+					$rootScope.user = users[0];
+				}else{
+					var newUser = new User();
+					newUser.$save(function(){
+						userID = newUser._id;
+						$rootScope.user = newUser;
+						$rootScope.go('/users/self/edit');
+					});
+				}
+			});
+		}
+		
+		
 		$rootScope.go = function(path, options, transition, location){
 			if(_.isObject(options)){
 				options = options || {};

@@ -1,0 +1,29 @@
+<div content-for="title">
+  <span>编辑</span>
+</div>
+
+
+<div class="scrollable">
+ <div class="scrollable-content section">
+   <form>
+	   <div bs-panel title="基本信息">
+	       <input bs-form-control ng-model="user.name"
+	        type="text" class="col-xs-9 col-sm-10 col-lg-11"
+	        label="姓名" label-class="col-xs-3 col-sm-2 col-lg-1" 
+	        placeholder="请输入姓名"/>
+	
+	       <switch bs-form-control ng-model="user.sex"
+	        ng-change="switchChanged()" ng-click="switchClicked()"
+	        label="性别" label-class="col-xs-3 col-sm-2 col-lg-1"
+	        class="col-xs-9 col-sm-10 col-lg-11" >
+	        </switch>
+	    </div>
+	    <div bs-panel class="form-actions">
+	      <div content-for="navbarAction" duplicate>
+	        <button class="btn btn-primary">保存</button>
+	      </div>
+	    </div>
+   </form>
+
+ </div>
+</div>

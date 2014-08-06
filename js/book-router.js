@@ -32,6 +32,10 @@
 			templateUrl: __TPL__("tpl/mylibrary.html"),
 			controller: "MyLibraryCtrl"
 		});
+		$routeProvider.when("/users/self/edit", {
+			templateUrl: __TPL__("tpl/editUser.html"),
+			controller: "EditUserCtrl"
+		});
 		
 		$routeProvider.otherwise({
 			templateUrl: __TPL__("tpl/blank.html"),
