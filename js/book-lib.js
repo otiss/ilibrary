@@ -222,5 +222,13 @@
 		};
 	});
 
+	app.filter("library", function() {
+		return function(input) {
+			if(!input){
+				return "";
+			}
+			return ((input && input.name) || 'XXX') + "的图书馆";
+		};
+	});
 	
 })(angular, _);

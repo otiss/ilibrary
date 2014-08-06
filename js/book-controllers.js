@@ -99,7 +99,7 @@
 		
 		User.getById(libID, function(user){
 			var lib = $scope.library = new Library(_.pick(user, '_id'));
-			lib.name = user.name + '的图书馆';
+			lib.name = user.name;
 		});
 	}]);
 	
@@ -152,7 +152,7 @@
 				$scope.user = user;
 			})
 		}else{
-			$scope.user = new User();
+			$scope.user = new User({type: 'library'});
 		}
 		
 		$scope.save = function(){

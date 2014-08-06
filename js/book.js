@@ -69,26 +69,6 @@
 	function($rootScope, $location, $window, $cookies, $filter, $navigate, $document, 
 			User, Book, Library){
 		
-		var userID = loginedUser && loginedUser._id;
-		if(userID){
-			$rootScope.user = new User(loginedUser);
-		}else if($location.search() && $location.search().userID){
-			userID = $location.search().userID;
-			User.query({_id: userID}, function(users){
-				if(users && users.length > 0){
-					$rootScope.user = users[0];
-				}else{
-					var newUser = new User();
-					newUser.$save(function(){
-						userID = newUser._id;
-						$rootScope.user = newUser;
-						$rootScope.go('/users/self/edit');
-					});
-				}
-			});
-		}
-		
-		
 		$rootScope.go = function(path, options, transition, location){
 			if(_.isObject(options)){
 				options = options || {};
@@ -120,15 +100,41 @@
 			$rootScope.loading = false;
 		});
 		
-		$rootScope.libraries = [];
-		User.query({type: 'library'}, function(users){
-			var libraries = _.map(users, function(user){
-				var lib = new Library(_.pick(user, '_id')); 
-				lib.name = user.name + '的图书馆';
-				return lib;
+		var userID = loginedUser && loginedUser._id;
+		if(userID){
+			$rootScope.user = new User(loginedUser);
+		}else if($location.search() && $location.search().userID){
+			userID = $location.search().userID;
+			User.query({_id: userID}, function(users){
+				if(users && users.length > 0){
+					$rootScope.user = users[0];
+					_.extend(loginedUser, $rootScope.user);
+				}else{
+					var newUser = new User({_id: userID, type: 'library'});
+					newUser.$save(function(){
+						userID = newUser._id;
+						$rootScope.user = newUser;
+						_.extend(loginedUser, $rootScope.user);
+						$rootScope.$emit('libraries.refresh');
+						$rootScope.go('/users/self/edit');
+					});
+				}
 			});
-			$rootScope.libraries = libraries;
+			$rootScope.go('/');
+		}		
+		
+		$rootScope.libraries = [];
+		$rootScope.$on('libraries.refresh', function(){
+			User.query({type: 'library'}, function(users){
+				var libraries = _.map(users, function(user){
+					var lib = new Library(_.pick(user, '_id')); 
+					lib.name = user.name;
+					return lib;
+				});
+				$rootScope.libraries = libraries;
+			});
 		});
+		$rootScope.$emit('libraries.refresh');
 		
 	}]);
 
