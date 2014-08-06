@@ -22,19 +22,23 @@
 		
 		$routeProvider.when("/books/wish", {
 			templateUrl: __TPL__("tpl/wishes.html"),
-			controller: "WishesCtrl"
+			controller: "WishesCtrl",
+            needLogin: true
 		});
 		$routeProvider.when("/books/own", {
 			templateUrl: __TPL__("tpl/ownes.html"),
-			controller: "OwnesCtrl"
+			controller: "OwnesCtrl",
+            needLogin: true
 		});
 		$routeProvider.when("/books/mylibrary", {
 			templateUrl: __TPL__("tpl/mylibrary.html"),
-			controller: "MyLibraryCtrl"
+			controller: "MyLibraryCtrl",
+            needLogin: true
 		});
 		$routeProvider.when("/users/self/edit", {
 			templateUrl: __TPL__("tpl/editUser.html"),
-			controller: "EditUserCtrl"
+			controller: "EditUserCtrl",
+            needLogin: true
 		});
 		
 		$routeProvider.otherwise({

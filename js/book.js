@@ -87,8 +87,11 @@
 		$rootScope.back = function(){
 			$navigate.back();
 		}
-		$rootScope.$on("$routeChangeStart", function(){
-			$rootScope.loading = true;
+		$rootScope.$on("$routeChangeStart", function(event, route, c){
+			if(route.$$route && route.$$route.needLogin && !($rootScope.user && $rootScope.user._id)){
+                return $rootScope.go('/');
+            }
+            $rootScope.loading = true;
 		});
 		$rootScope.$on("$routeChangeSuccess", function(){
 			$rootScope.loading = false;
@@ -120,7 +123,6 @@
 					});
 				}
 			});
-			$rootScope.go('/');
 		}		
 		
 		$rootScope.libraries = [];
