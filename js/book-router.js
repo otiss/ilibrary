@@ -10,6 +10,11 @@
 			controller: "HomeCtrl"
 		});
 		
+		$routeProvider.when("/books/douban", {
+			templateUrl: __TPL__("tpl/books.html"),
+			controller: "DoubanBooksCtrl"
+		});
+		
 		$routeProvider.when("/libraries/:libraryID", {
 			templateUrl: __TPL__("tpl/library.html"),
 			controller: "LibraryCtrl"

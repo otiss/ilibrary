@@ -2,11 +2,37 @@
 	'use strict';
 	var app = angular.module('bookApp');
 	
-	app.controller('HomeCtrl', ['$scope', '$filter', 'dbBook', 'Book', 'IDGenerator', 'ObjectConverter', 
-	                            function($scope, $filter, dbBook, Book, Generator, Converter){
+	app.controller('HomeCtrl', ['$scope', '$filter', 'dbBook', 'Book', 'BookReference', 'IDGenerator', 'ObjectConverter', 
+	                            function($scope, $filter, dbBook, Book, BookReference, Generator, Converter){
+		Book.query({type: 'recommend'}, {count: 20}, function(books){
+			var bookIDs = _.pluck(books, '_id');
+			if(bookIDs && bookIDs.length > 0){
+				BookReference.query({bookID: {$in: bookIDs}}, function(brs){
+					_.each(books, function(book){
+						var found = _.find(brs, function(br){
+							return br.bookID == book._id && br.types && br.types.indexOf('wishship') > -1;
+						});
+						if(found){
+							book.$$alreadyWish = true;
+						}
+						found = _.find(brs, function(br){
+							return br.bookID == book._id && br.types && br.types.indexOf('ownership') > -1;
+						});
+						if(found){
+							book.$$alreadyShare = true;
+						}
+					})
+				});
+			}
+			$scope.books = books;
+		});
+		
 		$scope.search = function(event, keywords){
-			if(keywords && event.keyCode){
+			var keycode = (event.keyCode ? event.keyCode : event.which);
+			if(keywords && keycode == 13){
+				$scope.$emit('loading.start');
 				dbBook.search(keywords, function(datas){
+					$scope.$emit('loading.end');
 					if(datas && datas.length > 0){
 						$scope.books = _.map(datas, function(data){
 							var book = Converter.toBook(data);
@@ -31,6 +57,36 @@
 				book.$$alreadyOwn = true;
 			});
 		};
+	}]);
+	
+	app.controller('DoubanBooksCtrl', ['$scope', '$filter', 'dbBook', 'Book', 'BookReference', 'IDGenerator', 'ObjectConverter', 
+	                            function($scope, $filter, dbBook, Book, BookReference, Generator, Converter){
+		$scope.search = function(event, keywords){
+			if(keywords && event.keyCode){
+				dbBook.search(keywords, function(datas){
+					if(datas && datas.length > 0){
+						$scope.books = _.map(datas, function(data){
+							var book = Converter.toBook(data);
+							book._id = data.isbn13;
+							return book;
+						});
+					}
+				});
+			}
+		};
+		
+		$scope.add = function(index, book){
+			Book.query({id: book._id}, function(data){
+				var exist = data && data.length > 0;
+				if(!exist){
+					book.type = 'recommend';
+					book.$save(function(){
+						console.log('added ', book);
+					});
+				}
+			});
+		};
+		
 	}]);
 	
 	app.controller('LibraryCtrl', ['$scope', '$routeParams', 'User', 'Library', 'BookReference', 

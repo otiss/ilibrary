@@ -94,11 +94,13 @@
 		$rootScope.$on("$routeChangeSuccess", function(){
 			$rootScope.loading = false;
 		});
-		
-		var library = $rootScope.library = {};
-		Book.query({}, function(books){
-			library.books = books;
+		$rootScope.$on("loading.start", function(){
+			$rootScope.loading = true;
 		});
+		$rootScope.$on("loading.end", function(){
+			$rootScope.loading = false;
+		});
+		
 		$rootScope.libraries = [];
 		User.query({type: 'library'}, function(users){
 			var libraries = _.map(users, function(user){

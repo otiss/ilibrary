@@ -2,7 +2,7 @@
 
 	var app = angular.module('bookDouban', []);
 	
-	var base_url = 'http://localhost/v2/',
+	var base_url = ((environment && environment.api_url)?environment.api_url:'') + '/v2/',
 		defaultParameters = {},
 		promiseThen = function(httpPromise, successcb, errorcb, transformFn) {
 			return httpPromise.then(function(response) {

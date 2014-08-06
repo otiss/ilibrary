@@ -98,6 +98,7 @@
 		var toReference = function(book){
 			var ref = new BookReference(_.pick(book, 'title', 'author', 'price'));
 			ref.image = $filter('image')(book.images);
+			ref.bookID = book._id;
 			if($rootScope.user){
 				ref.container = {
 					containerID: $rootScope.user._id,
@@ -202,12 +203,12 @@
 			large: "large"
 		}
 		return function(input, type){
-			type = type || "large";
+			type = type || "small";
 			if(!input){
 				return "";
 			}
 			if(angular.isObject(input)){
-				var key = mapping[type] || mapping.large;
+				var key = mapping[type] || mapping.small;
 				return input[key] || "";
 			}else{
 				return input;
