@@ -145,8 +145,8 @@
                         },
                         verb: verb,
                         target: {
-                            actorID: bref._id,
-                            actorType: bref.$$type,
+                            targetID: bref._id,
+                            targetType: bref.$$type,
 							name: bref.name || ''
                         },
                         status: 0

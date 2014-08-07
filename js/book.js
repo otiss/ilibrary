@@ -66,7 +66,9 @@
     app.factory("Activity", ["$resourceHttp", function($mongolabResourceHttp){
         return $mongolabResourceHttp("activities", 'activity');
     }]);
-	
+    app.factory("Transaction", ["$resourceHttp", function($mongolabResourceHttp){
+        return $mongolabResourceHttp("transactions", 'transaction');
+    }]);
 	
 	app.run(["$rootScope", "$location", "$window", "$cookies", "$filter", "$navigate", "$document", 
 	         "User", "Book", "Library", 'Activity',

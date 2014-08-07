@@ -174,10 +174,31 @@
 	}]);
 	
 	
-	app.controller('MessagesCtrl', ['$scope', '$rootScope', 'Activity', 
-	                               function($scope, $rootScope, Activity){
+	app.controller('MessagesCtrl', ['$scope', '$rootScope', 'Activity', 'Transaction',
+	                               function($scope, $rootScope, Activity, Transaction){
 		$scope.messages = $rootScope.requests.items;
-		
+
+        $scope.accept = function(index, message){
+            var transaction = new Transaction({
+                purchaser: {
+                    purchaserID: message.actor.actorID,
+                    purchaserName: message.actor.name
+                },
+                vendor: {
+                    vendorID: message.context.contextID,
+                    vendorName: message.context.name
+                },
+                goods: {
+                    goodsID: message.target.targetID,
+                    goodsName: message.target.name
+                },
+                amount: 0,
+                status: 5
+            });
+            transaction.$save(function(){
+                $scope.messages.splice(index, 1);
+            });
+        }
 	}]);
 	
 	app.controller('SignInCtrl', ['$scope', '$rootScope', 'User', 
