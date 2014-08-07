@@ -40,6 +40,11 @@
 			controller: "EditUserCtrl",
             needLogin: true
 		});
+		$routeProvider.when("/messages", {
+			templateUrl: __TPL__("tpl/messages.html"),
+			controller: "MessagesCtrl",
+            needLogin: true
+		});
 		
 		$routeProvider.otherwise({
 			templateUrl: __TPL__("tpl/blank.html"),

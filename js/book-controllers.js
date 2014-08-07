@@ -62,7 +62,7 @@
 	app.controller('DoubanBooksCtrl', ['$scope', '$filter', 'dbBook', 'Book', 'BookReference', 'IDGenerator', 'ObjectConverter', 
 	                            function($scope, $filter, dbBook, Book, BookReference, Generator, Converter){
 		$scope.search = function(event, keywords){
-			if(keywords && event.keyCode){
+			if(keywords && event.keyCode == 13){
 				dbBook.search(keywords, function(datas){
 					if(datas && datas.length > 0){
 						$scope.books = _.map(datas, function(data){
@@ -170,6 +170,13 @@
 				$rootScope.go('/');
 			});
 		}
+		
+	}]);
+	
+	
+	app.controller('MessagesCtrl', ['$scope', '$rootScope', 'Activity', 
+	                               function($scope, $rootScope, Activity){
+		$scope.messages = $rootScope.requests.items;
 		
 	}]);
 	

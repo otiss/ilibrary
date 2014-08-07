@@ -140,12 +140,14 @@
                     {
                         actor: {
                             actorID: $rootScope.user._id,
-                            actorType: $rootScope.user.$$type
+                            actorType: $rootScope.user.$$type,
+							name: $rootScope.user.name || ''
                         },
                         verb: verb,
                         target: {
                             actorID: bref._id,
-                            actorType: bref.$$type
+                            actorType: bref.$$type,
+							name: bref.name || ''
                         },
                         status: 0
                     }
@@ -153,7 +155,8 @@
                 if(ctx && ctx._id && ctx.$$type){
                     act.context = {
                         contextID: ctx._id,
-                        contextType: ctx.$$type
+                        contextType: ctx.$$type,
+						name: ctx.name || ''
                     }
                 }
                 return act;
@@ -248,6 +251,23 @@
 	app.filter("count", function() {
 		return function(input) {
 			return input || "0";
+		};
+	});
+	app.filter("name", function() {
+		return function(input) {
+			if(!input){
+				return "";
+			}
+			return (input && input.name) || "XXX";
+		};
+	});
+	app.filter("activity", function() {
+		return function(input) {
+			if(!input){
+				return "";
+			}
+			var objName = (input.object && input.object.name) || 'XXX';
+			return '请求借阅' + objName;
 		};
 	});
 

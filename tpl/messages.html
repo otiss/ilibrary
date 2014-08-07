@@ -1,0 +1,27 @@
+<header>
+	<div content-for="title">
+	  	<span>消息</span>
+	</div>
+</header>
+
+<div class="scrollable">
+  <div class="scrollable-content">
+    <div class="list-group media-list" ng-if="messages.length > 0">
+		<div ng-repeat="message in messages" class="list-group-item media message">
+			<div class="pull-left">
+				<i class="fa fa-user fa-4x media-object"></i>
+			</div>
+			<div class="pull-right">
+				<span class="btn" ng-click="accept($index, message)"><i class="fa fa-thumbs-up"></i>接受</span>
+				<span class="btn" ng-click="reject($index, message)"><i class="fa fa-thumbs-down"></i>拒绝</span>
+			</div>
+			<div class="media-body">
+				<h5 class="media-heading">{{message.actor | name}}</h5>
+				<div class="message-metadata">
+					<span>{{message | activity}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+  </div>
+</div>
