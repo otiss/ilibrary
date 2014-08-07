@@ -1,0 +1,27 @@
+<header>
+	<div content-for="title">
+	  	<span>图书</span>
+	</div>
+</header>
+
+<input ng-model="keywords" type="search" class="form-control app-search" placeholder="请输入关键字.." ng-keypress="search($event, keywords)"/>
+<div class="scrollable">
+  <div class="scrollable-content">
+    <div class="list-group" ng-if="books.length > 0">
+		<a ng-repeat="book in books" class="list-group-item item" href="javascript:;;;">
+			<div class="pull-left">
+				<i class="fa fa-book"></i>
+			</div>
+			<div class="pull-right">
+				<span class="btn" ng-click="add($index, book)"><i class="fa fa-heart"></i>添加</span>
+			</div>
+			<div class="item-body">
+				<h5 class="item-heading">{{book.title}}</h5>
+				<div class="item-metadata">
+					<span><span ng-repeat="authorName in book.author">{{authorName}}</span></span>
+				</div>
+			</div>
+		</a>
+	</div>
+  </div>
+</div>

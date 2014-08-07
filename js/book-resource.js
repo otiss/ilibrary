@@ -20,7 +20,7 @@
 		};
 		
 		this.$get = ["$http", function($http) {
-			return function(collectionName) {
+			return function(collectionName, resourceType) {
 				var dbUrl = config.BASE_URL + config.DB_NAME,
 					collectionUrl = config.BASE_URL + collectionName,
 					resourceRespTransform = function(data) {
@@ -50,6 +50,7 @@
 					},
 					Resource = function(data) {
 						angular.extend(this, data);
+                        this.$$type = resourceType || collectionName;
 					};
 				
 				angular.extend(Resource, {
