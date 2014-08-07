@@ -180,4 +180,29 @@
 		
 	}]);
 	
+	app.controller('SignInCtrl', ['$scope', '$rootScope', 'User', 
+	                               function($scope, $rootScope, User){
+		$scope.user = new User();
+		
+		$scope.login = function(){
+			var userID = $scope.user._id;
+			User.query({_id: userID}, function(users){
+				if(users && users.length > 0){
+					$rootScope.user = users[0];
+					_.extend(loginedUser, $rootScope.user);
+                    $rootScope.$emit('libraries.refresh');
+                    $rootScope.$emit('request.refresh');
+					$rootScope.go('/');
+				}else{
+					$scope.warning = '找不到此用户';
+					$scope.user._id = '';
+				}
+			});
+		};
+		
+		$scope.cancel = function(){
+			$rootScope.go('/');
+		}
+	}]);
+	
 })(angular, _);

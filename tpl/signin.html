@@ -1,0 +1,31 @@
+<div content-for="title">
+  <span>用户登陆</span>
+</div>
+
+
+<div class="panel panel-default">
+	<div class="panel-body">
+		<form name="form" class="form-horizontal" novalidate>
+			<div ng-if="warning" class="form-group">
+				<div class="col-xs-offset-2 col-xs-8">
+					<div class="alert alert-warning">{{warning}}</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-xs-offset-2 col-xs-8">
+					<input id="signin-username" type="text" class="form-control" ng-model="user._id" placeholder="请输入用户名" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-xs-offset-4 col-xs-8">
+					<div class="col-xs-2">
+						<button class="btn btn-primary" ng-disabled="form.$invalid" ng-click="login()">登 陆</button>
+					</div>
+					<div class="col-xs-2">
+						<button class="btn btn-default" ng-click="cancel()">取 消</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

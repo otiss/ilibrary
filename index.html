@@ -57,6 +57,9 @@
 				<a class="btn" ng-click="go('/messages', 'mainSidebar')">
 					<i class="fa fa-envelope"></i>消息<span class="badge">{{requests.total}}</span>
 				</a>
+				<a class="btn" ng-click="go('/users/self/edit', 'mainSidebar')">
+					<i class="fa fa-user"></i>{{user.name}}</span>
+				</a>
 			</div>
         </nav>
 
@@ -109,8 +112,11 @@
 				  <span>我的图书馆</span>
 				</div>
 				<div class="btn-group pull-left">
-				  <div ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle">
+				  <div ng-if="user._id" ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle">
 					<i class="fa fa-bars"></i> 菜单
+				  </div>
+				  <div nf-if="!user._id" ng-click="go('/signin')" class="btn btn-navbar sidebar-toggle">
+					<i class="fa fa-sign-in"></i> 登陆
 				  </div>
 				</div>
 				<div class="btn-group pull-right" yield-to="navbarAction">
