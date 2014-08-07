@@ -10,6 +10,11 @@
 			controller: "HomeCtrl"
 		});
 		
+		$routeProvider.when("/signin", {
+			templateUrl: __TPL__("tpl/signin.html"),
+			controller: "SignInCtrl"
+		});
+		
 		$routeProvider.when("/books/douban", {
 			templateUrl: __TPL__("tpl/books.html"),
 			controller: "DoubanBooksCtrl"
