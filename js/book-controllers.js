@@ -164,7 +164,7 @@
 		}
 		
 		$scope.save = function(){
-			var updateObj = _.pick($scope.user, 'name');
+			var updateObj = _.pick($scope.user, 'name', 'username', 'password');
 			$scope.user.$updateset(updateObj, function(){
 				_.extend($rootScope.user, updateObj);
 				$rootScope.go('/');
@@ -185,17 +185,24 @@
 		$scope.user = new User();
 		
 		$scope.login = function(){
-			var userID = $scope.user._id;
-			User.query({_id: userID}, function(users){
+			var username = $scope.username, password = $scope.password;
+			User.query({username: username}, function(users){
 				if(users && users.length > 0){
-					$rootScope.user = users[0];
-					_.extend(loginedUser, $rootScope.user);
-                    $rootScope.$emit('libraries.refresh');
-                    $rootScope.$emit('request.refresh');
-					$rootScope.go('/');
+					if(users[0].password === password){
+                        $rootScope.user = users[0];
+                        _.extend(loginedUser, $rootScope.user);
+                        $rootScope.$emit('libraries.refresh');
+                        $rootScope.$emit('request.refresh');
+                        $rootScope.go('/');
+                    }else{
+                        $scope.warning = '密码错误';
+                        $scope.username = '';
+                        $scope.password = '';
+                    }
 				}else{
 					$scope.warning = '找不到此用户';
-					$scope.user._id = '';
+					$scope.username = '';
+                    $scope.password = '';
 				}
 			});
 		};
