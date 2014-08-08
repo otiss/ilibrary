@@ -164,7 +164,7 @@
 		}
 		
 		$scope.save = function(){
-			var updateObj = _.pick($scope.user, 'name');
+			var updateObj = _.pick($scope.user, 'name', 'username', 'password');
 			$scope.user.$updateset(updateObj, function(){
 				_.extend($rootScope.user, updateObj);
 				$rootScope.go('/');
@@ -174,10 +174,31 @@
 	}]);
 	
 	
-	app.controller('MessagesCtrl', ['$scope', '$rootScope', 'Activity', 
-	                               function($scope, $rootScope, Activity){
+	app.controller('MessagesCtrl', ['$scope', '$rootScope', 'Activity', 'Transaction',
+	                               function($scope, $rootScope, Activity, Transaction){
 		$scope.messages = $rootScope.requests.items;
-		
+
+        $scope.accept = function(index, message){
+            var transaction = new Transaction({
+                purchaser: {
+                    purchaserID: message.actor.actorID,
+                    purchaserName: message.actor.name
+                },
+                vendor: {
+                    vendorID: message.context.contextID,
+                    vendorName: message.context.name
+                },
+                goods: {
+                    goodsID: message.target.targetID,
+                    goodsName: message.target.name
+                },
+                amount: 0,
+                status: 5
+            });
+            transaction.$save(function(){
+                $scope.messages.splice(index, 1);
+            });
+        }
 	}]);
 	
 	app.controller('SignInCtrl', ['$scope', '$rootScope', 'User', 
@@ -185,17 +206,24 @@
 		$scope.user = new User();
 		
 		$scope.login = function(){
-			var userID = $scope.user._id;
-			User.query({_id: userID}, function(users){
+			var username = $scope.username, password = $scope.password;
+			User.query({username: username}, function(users){
 				if(users && users.length > 0){
-					$rootScope.user = users[0];
-					_.extend(loginedUser, $rootScope.user);
-                    $rootScope.$emit('libraries.refresh');
-                    $rootScope.$emit('request.refresh');
-					$rootScope.go('/');
+					if(users[0].password === password){
+                        $rootScope.user = users[0];
+                        _.extend(loginedUser, $rootScope.user);
+                        $rootScope.$emit('libraries.refresh');
+                        $rootScope.$emit('request.refresh');
+                        $rootScope.go('/');
+                    }else{
+                        $scope.warning = '密码错误';
+                        $scope.username = '';
+                        $scope.password = '';
+                    }
 				}else{
 					$scope.warning = '找不到此用户';
-					$scope.user._id = '';
+					$scope.username = '';
+                    $scope.password = '';
 				}
 			});
 		};
