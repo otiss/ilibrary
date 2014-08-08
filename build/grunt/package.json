@@ -1,7 +1,7 @@
 {
   "name": "ilibrary",
   "version": "0.1.0",
-  "sourceDir": "/www/ilibrary",
+  "sourceDir": "/www/ilibrary2",
   "packageDir": "/www/ilibrary-temp",
   "dependencies": {
     "grunt": "~0.4.1",
