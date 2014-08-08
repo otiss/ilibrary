@@ -83,7 +83,7 @@
 				},
 				files: {
 				  //the task will scan all the source files, and generate 'test.manifest' file as the cache setting. 
-				  '<%= pkgInfo.packageDir %>/resources/mycvh.cache': ['<%= pkgInfo.sourceDir %>/index.html']
+				  '<%= pkgInfo.packageDir %>/ilibrary.cache': ['<%= pkgInfo.sourceDir %>/index.html']
 				}
 			  }
 			}	   
@@ -102,11 +102,11 @@
 			files: [
 				{ 
 					src: [
-					'resources/js/*',
-					'resources/css/*',
+					'/js/*',
+					'/css/*',
 					// etc
 					],
-				dest: '<%= pkgInfo.sourceDir %>/resources/mycvs.cache' },
+				dest: '<%= pkgInfo.sourceDir %>/ilibrary.cache' },
 			]
 		}
 	}
