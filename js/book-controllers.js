@@ -186,15 +186,15 @@
             var transaction = new Transaction({
                 purchaser: {
                     purchaserID: message.actor.actorID,
-                    purchaserName: message.actor.name
+                    purchaserName: message.actor.name || ''
                 },
                 vendor: {
                     vendorID: message.context.contextID,
-                    vendorName: message.context.name
+                    vendorName: message.context.name || ''
                 },
                 goods: {
                     goodsID: message.target.targetID,
-                    goodsName: message.target.name
+                    goodsName: message.target.name || ''
                 },
                 amount: 1,
                 status: 5
@@ -214,7 +214,14 @@
 				}
 			});
 			
-        }
+        };
+		
+		$scope.read = function(index, message){
+			message.$updateset({status: 5}, function(){
+				message.status = 5;
+				$scope.messages.splice(index, 1);
+			});
+		};
 	}]);
 	
 	app.controller('SignInCtrl', ['$scope', '$rootScope', 'User', 

@@ -262,12 +262,14 @@
 		};
 	});
 	app.filter("activity", function() {
+		var actionMappings = {'request.borrow': '请求借阅'}
 		return function(input) {
 			if(!input){
 				return "";
 			}
-			var objName = (input.target && input.target.name) || 'XXX';
-			return '请求借阅《' + objName + '》';
+			var objName = (input.target && input.target.name) || 'XXX',
+			action = actionMappings[input.verb];
+			return action + '《' + objName + '》';
 		};
 	});
 

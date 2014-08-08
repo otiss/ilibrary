@@ -12,8 +12,8 @@
 				<i class="fa fa-user fa-4x media-object"></i>
 			</div>
 			<div class="pull-right">
-				<span class="btn" ng-click="accept($index, message)"><i class="fa fa-thumbs-up"></i>接受</span>
-				<span class="btn" ng-click="reject($index, message)"><i class="fa fa-thumbs-down"></i>拒绝</span>
+				<span class="btn" ng-if="message.verb == 'request.borrow'" ng-click="accept($index, message)"><i class="fa fa-thumbs-up"></i>接受</span>
+				<span class="btn" ng-click="read($index, message)"><i class="fa fa-minus"></i>忽略</span>
 			</div>
 			<div class="media-body">
 				<h5 class="media-heading">{{message.actor | name}}</h5>
