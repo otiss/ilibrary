@@ -104,9 +104,12 @@
 
          $scope.want = function($index, book){
             var act = ActivityGenerator.fromBookReference('request.borrow', book, $scope.library);
-             act.$save(function(){
-                book.$$alreadyRequest = true;
-             });
+			if(act.target){
+				act.target.name = book.title;
+			}
+            act.$save(function(){
+               book.$$alreadyRequest = true;
+            });
          }
 
 	}]);

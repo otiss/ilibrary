@@ -111,12 +111,9 @@
 				<div class="navbar-brand navbar-brand-center" yield-to="title">
 				  <span>我的图书馆</span>
 				</div>
-				<div class="btn-group pull-left">
-				  <div ng-if="user._id" ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle">
+				<div class="btn-group pull-left" yield-to="menuAction">
+				  <div ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle">
 					<i class="fa fa-bars"></i> 菜单
-				  </div>
-				  <div ng-if="!user._id" ng-click="go('/signin')" class="btn btn-navbar sidebar-toggle">
-					<i class="fa fa-sign-in"></i> 登陆
 				  </div>
 				</div>
 				<div class="btn-group pull-right" yield-to="navbarAction">

@@ -266,8 +266,8 @@
 			if(!input){
 				return "";
 			}
-			var objName = (input.object && input.object.name) || 'XXX';
-			return '请求借阅' + objName;
+			var objName = (input.target && input.target.name) || 'XXX';
+			return '请求借阅《' + objName + '》';
 		};
 	});
 
