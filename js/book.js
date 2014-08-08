@@ -70,9 +70,9 @@
         return $mongolabResourceHttp("transactions", 'transaction');
     }]);
 	
-	app.run(["$rootScope", "$location", "$window", "$cookies", "$filter", "$navigate", "$document", 
+	app.run(["$rootScope", "$location", "$timeout", "$cookies", "$filter", "$navigate", "$document", 
 	         "User", "Book", "Library", 'Activity',
-	function($rootScope, $location, $window, $cookies, $filter, $navigate, $document, 
+	function($rootScope, $location, $timeout, $cookies, $filter, $navigate, $document, 
 			User, Book, Library, Activity){
 		
 		$rootScope.go = function(path, options, transition, location){
@@ -108,6 +108,23 @@
 		$rootScope.$on("loading.end", function(){
 			$rootScope.loading = false;
 		});
+		
+		var funcClearNoti = function(){
+			$timeout(function(){
+				$rootScope.$$notification = {};
+			}, 3000);
+		}
+		_.each(['success', 'info', 'warning', 'danger'], function(type){
+			$rootScope.$on('notification.' + type, function(event, message){
+				$rootScope.$$notification = {
+					type: 'alert-' + type,
+					content: message
+				};
+				funcClearNoti();
+			});
+		})
+		
+		
 		
 		var userID = loginedUser && loginedUser._id;
 		if(userID){

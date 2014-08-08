@@ -138,8 +138,9 @@
 			var updateObj = _.pick(book, 'types');
 			updateObj.types = updateObj.types || [];
 			updateObj.types.push('public');
+			updateObj.amount = 1;
 			book.$updateset(updateObj, function(){
-				book.types = updateObj.types;
+				_.extend(book, updateObj);
 				book.$$alreadyShare = true;
 			});
 		}
@@ -177,8 +178,8 @@
 	}]);
 	
 	
-	app.controller('MessagesCtrl', ['$scope', '$rootScope', 'Activity', 'Transaction',
-	                               function($scope, $rootScope, Activity, Transaction){
+	app.controller('MessagesCtrl', ['$scope', '$rootScope', 'Activity', 'Transaction', 'BookReference',
+	                               function($scope, $rootScope, Activity, Transaction, BookReference){
 		$scope.messages = $rootScope.requests.items;
 
         $scope.accept = function(index, message){
@@ -195,12 +196,24 @@
                     goodsID: message.target.targetID,
                     goodsName: message.target.name
                 },
-                amount: 0,
+                amount: 1,
                 status: 5
             });
-            transaction.$save(function(){
-                $scope.messages.splice(index, 1);
-            });
+            
+			BookReference.getById(message.target.targetID, function(bookRef){
+				var amount = (bookRef.amount != undefined)?bookRef.amount:1;
+				if(amount > 0){
+					transaction.$save(function(){
+						bookRef.$updateset({amount: amount-1}, function(){
+							$scope.messages.splice(index, 1);
+							$scope.$emit('notification.success', '确认此次借阅。');
+						});
+					});
+				}else{
+					$scope.$emit('notification.warning', '此图书已经借出。');
+				}
+			});
+			
         }
 	}]);
 	
@@ -219,12 +232,12 @@
                         $rootScope.$emit('request.refresh');
                         $rootScope.go('/');
                     }else{
-                        $scope.warning = '密码错误';
+						$scope.$emit('notification.warning', '密码错误。');
                         $scope.username = '';
                         $scope.password = '';
                     }
 				}else{
-					$scope.warning = '找不到此用户';
+					$scope.$emit('notification.warning', '找不到此用户。');
 					$scope.username = '';
                     $scope.password = '';
 				}
