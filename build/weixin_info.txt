@@ -1,0 +1,49 @@
+4. 更新自定义菜单
+
+http://218.244.146.165:3001/menu
+post
+content-type：application/json
+body：copy below json
+
+{
+  "buttons": [
+    {    
+          "name":"关于小不点",
+          "key":"info"
+      },
+    {
+      "name":"图书馆",
+      "buttons": [
+          {    
+          "name":"发现",
+          "url":"home"
+          },
+        {    
+          "name":"我的图书",
+          "url":"ownbooks"
+          },
+        {    
+          "name":"我的心愿图书",
+          "url":"wishbooks"
+          },
+        {    
+          "name":"我的分享图书",
+          "url":"sharebooks"
+          }
+      ]
+    },
+    {
+      "name":"我",
+      "buttons": [
+          {    
+          "name":"我的帐号",
+          "url":"account"
+          },
+        {    
+          "name":"我的消息",
+          "url":"message"
+          }
+      ]
+    }
+  ]
+}
