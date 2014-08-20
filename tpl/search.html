@@ -2,6 +2,14 @@
 	<div content-for="title">
 	  	<span>发现图书</span>
 	</div>
+	<div content-for="menuAction">
+		<div ng-if="user._id" ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle">
+			<i class="fa fa-bars"></i> 菜单
+		</div>
+		<div ng-if="!user._id" ng-click="go('/signin')" class="btn btn-navbar sidebar-toggle">
+			<i class="fa fa-sign-in"></i> 登陆
+		</div>
+	</div>
 </header>
 
 <input ng-model="keywords" type="search" class="form-control app-search" placeholder="请输入关键字.." ng-keypress="search($event, keywords)"/>
@@ -13,8 +21,8 @@
 				<img class="img-thumbnail" ng-src="{{book.images | image}}"/>
 			</div>
 			<div class="pull-right">
-				<span class="btn" ng-if="!book.$$alreadyWish" ng-click="wish($index, book)"><i class="fa fa-heart"></i>想要</span>
-				<span class="btn" ng-if="!book.$$alreadyOwn" ng-click="own($index, book)"><i class="fa fa-star"></i>已有</span>
+				<span class="btn" ng-if="user._id && !book.$$alreadyWish" ng-click="wish($index, book)"><i class="fa fa-heart"></i>想要</span>
+				<span class="btn" ng-if="user._id && !book.$$alreadyOwn" ng-click="own($index, book)"><i class="fa fa-star"></i>已有</span>
 			</div>
 			<div class="media-body">
 				<h5 class="media-heading">{{book.title}}</h5>

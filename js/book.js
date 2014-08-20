@@ -70,9 +70,9 @@
         return $mongolabResourceHttp("transactions", 'transaction');
     }]);
 	
-	app.run(["$rootScope", "$location", "$window", "$cookies", "$filter", "$navigate", "$document", 
+	app.run(["$rootScope", "$location", "$timeout", "$cookies", "$filter", "$navigate", "$document", 
 	         "User", "Book", "Library", 'Activity',
-	function($rootScope, $location, $window, $cookies, $filter, $navigate, $document, 
+	function($rootScope, $location, $timeout, $cookies, $filter, $navigate, $document, 
 			User, Book, Library, Activity){
 		
 		$rootScope.go = function(path, options, transition, location){
@@ -109,26 +109,44 @@
 			$rootScope.loading = false;
 		});
 		
+		var funcClearNoti = function(){
+			$timeout(function(){
+				$rootScope.$$notification = {};
+			}, 3000);
+		}
+		_.each(['success', 'info', 'warning', 'danger'], function(type){
+			$rootScope.$on('notification.' + type, function(event, message){
+				$rootScope.$$notification = {
+					type: 'alert-' + type,
+					content: message
+				};
+				funcClearNoti();
+			});
+		})
+		
+		
+		
 		var userID = loginedUser && loginedUser._id;
 		if(userID){
 			$rootScope.user = new User(loginedUser);
 		}else if($location.search() && $location.search().userID){
+			var func = function(){
+				_.extend(loginedUser, $rootScope.user);
+				$rootScope.$emit('libraries.refresh');
+				$rootScope.$emit('request.refresh');
+			}
+			
 			userID = $location.search().userID;
 			User.query({_id: userID}, function(users){
 				if(users && users.length > 0){
 					$rootScope.user = users[0];
-					_.extend(loginedUser, $rootScope.user);
-
-                    $rootScope.$emit('libraries.refresh');
-                    $rootScope.$emit('request.refresh');
+					func();
 				}else{
 					var newUser = new User({_id: userID, type: 'library'});
 					newUser.$save(function(){
 						userID = newUser._id;
 						$rootScope.user = newUser;
-						_.extend(loginedUser, $rootScope.user);
-                        $rootScope.$emit('libraries.refresh');
-                        $rootScope.$emit('request.refresh');
+						func();
 						$rootScope.go('/users/self/edit');
 					});
 				}
@@ -152,7 +170,7 @@
 		});
         $rootScope.$on('request.refresh', function(){
             if($rootScope.user && $rootScope.user._id){
-                Activity.query({verb: 'request.borrow', status: 0, context: {contextID: $rootScope.user._id, contextType: 'library'}}, function(activities){
+                Activity.query({verb: 'request.borrow', status: 0, 'context.contextID': $rootScope.user._id, 'context.contextType': 'library'}, function(activities){
                     $rootScope.requests = {
                         items: activities,
                         total: activities.length
