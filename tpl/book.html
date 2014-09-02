@@ -6,10 +6,10 @@
 
 <div class="container-fluid book-detail">
     <div class="row book-title">
-        {{book.title}}
+        <h3>{{book.title}}</h3>
     </div>
     <div class="row book-image">
-        <div class="image"><img ng-src="{{book.images | image:'large'}}"></div>
+        <div class="col-xs-offset-2 col-xs-8 image"><img ng-src="{{book.images | image:'large'}}" class="img-responsive img-rounded"></div>
     </div>
     <div class="row book-content">
         <div class="description">{{book.summary}}</div>
