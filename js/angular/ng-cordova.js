@@ -35,7 +35,7 @@ angular.module('ngCordova.plugins.barcodeScanner', [])
     scan: function (options) {
       var q = $q.defer();
 
-      cordova.plugins.barcodeScanner.scan(function (result) {
+      (new BarcodeScanner()).scan(function (result) {
         q.resolve(result);
       }, function (err) {
         q.reject(err);
@@ -54,7 +54,7 @@ angular.module('ngCordova.plugins.barcodeScanner', [])
        docs: https://github.com/wildabeast/BarcodeScanner#encoding-a-barcode
        */
 
-      cordova.plugins.barcodeScanner.encode(type, data, function (result) {
+      (new BarcodeScanner()).encode(type, data, function (result) {
         q.resolve(result);
       }, function (err) {
         q.reject(err);
