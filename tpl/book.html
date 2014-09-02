@@ -1,0 +1,17 @@
+<header>
+	<div content-for="title">
+	  	<span>图书详细</span>
+	</div>
+</header>
+
+<div class="container-fluid book-detail">
+    <div class="row book-title">
+        {{book.title}}
+    </div>
+    <div class="row book-image">
+        <div class="image"><img ng-src="{{book.images | image:'large'}}"></div>
+    </div>
+    <div class="row book-content">
+        <div class="description">{{book.summary}}</div>
+    </div>
+</div>

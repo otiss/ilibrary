@@ -88,7 +88,15 @@
 		};
 		
 	}]);
-	
+
+    app.controller('DoubanBookCtrl', ['$scope', '$routeParams', 'dbBook', function($scope, $routeParams, dbBook){
+        var isbn = $routeParams.isbn;
+        console.log('isbn', isbn);
+        dbBook.isbn(isbn, function(book){
+            $scope.book = book;
+        })
+    }]);
+
 	app.controller('LibraryCtrl', ['$scope', '$routeParams', 'User', 'Library', 'BookReference', 'ActivityGenerator',
 	                               function($scope, $routeParams, User, Library, BookReference, ActivityGenerator){
 		var libID = $routeParams.libraryID,
@@ -145,7 +153,8 @@
 			});
 		}
 	}]);
-	app.controller('MyLibraryCtrl', ['$scope', '$rootScope', 'BookReference', 
+
+    app.controller('MyLibraryCtrl', ['$scope', '$rootScope', 'BookReference',
 	                               function($scope, $rootScope, BookReference){
 		var queryObj = {types: {$all: ['ownership', 'public']}, container: {containerID: $rootScope.user._id, containerType: 'user'}};
 		BookReference.query(queryObj, function(brs){
@@ -176,8 +185,7 @@
 		}
 		
 	}]);
-	
-	
+
 	app.controller('MessagesCtrl', ['$scope', '$rootScope', 'Activity', 'Transaction', 'BookReference',
 	                               function($scope, $rootScope, Activity, Transaction, BookReference){
 		$scope.messages = $rootScope.requests.items;
@@ -255,5 +263,5 @@
 			$rootScope.go('/');
 		}
 	}]);
-	
+
 })(angular, _);

@@ -40,6 +40,10 @@
 			controller: "MyLibraryCtrl",
             needLogin: true
 		});
+        $routeProvider.when("/books/isbn/:isbn", {
+            templateUrl: __TPL__("tpl/book.html"),
+            controller: "DoubanBookCtrl"
+        });
 		$routeProvider.when("/users/self/edit", {
 			templateUrl: __TPL__("tpl/editUser.html"),
 			controller: "EditUserCtrl",

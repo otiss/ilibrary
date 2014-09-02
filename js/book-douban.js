@@ -59,7 +59,7 @@
 		
 		Book.isbn = function(isbn, successCB, failureCB){
 			return promiseThen($http.get(url + 'isbn/' + isbn, {
-				params: angular.extend({}, defaultParameters)
+				//params: angular.extend({}, defaultParameters)
 			}), successCB, failureCB, resourceRespTransform);
 		}
 		return Book;
